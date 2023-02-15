@@ -1,0 +1,17 @@
+{
+    "num_fundamentalists": 50,
+    "num_noise_optimist": 50,
+    "num_noise_pessimist": 50,
+    "market_price": 10,
+    "market_value": 10.1,
+    "num_of_steps": 100,
+    "v1": 1,
+    "alpha1": 1,
+    "alpha2": 1,
+    "v2": 1,
+    "alpha3": 1,
+    "beta": 1,
+    "gamma": 1,
+    "s": 1,
+    "R": 1
+}
