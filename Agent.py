@@ -46,16 +46,17 @@ class Agent:
             5: fund -> pes 
         Based on that it changes agents mood and stratedy"""
 
-        choice = ['optimist', 'pessimist', 'fundamentalis']
+        choice = ['noise_optimist', 'noise_pessimist', 'fundamentalist']
 
         if self.__type == 'fundamentalist':
             weights = [prob[4], prob[5], 1-prob[5]-prob[4]]
-            self.type(choices(choice, weights)[0])
+            self.type = choices(choice, weights)[0]
 
-        elif self.__type == 'optimist':
+        elif self.__type == 'noise_optimist':
             weights = [1-prob[2]-prob[0], prob[0], prob[2]]
-            self.type(choices(choice, weights)[0])
+            self.type = choices(choice, weights)[0]
 
-        elif self.__type == 'pessimist':
+        elif self.__type == 'noise_pessimist':
             weights = [prob[1], 1-prob[1]-prob[3], prob[3]]
-            self.type(choices(choice, weights)[0])
+            self.type = choices(choice, weights)[0]
+
