@@ -66,16 +66,16 @@ class Functions:
         return ED_c + ED_f
     
     @staticmethod
-    def prob_price_increase(pms):
+    def prob_price_increase(pms, m_u):
         #Atention! There is parameter mu in paper and i don't know wjat does it mean
-        a = pms["beta"]*(Functions.ED(pms) + 0.1)
+        a = pms["beta"]*(Functions.ED(pms)+ m_u)
         p_price_up = max(0, a)
         return p_price_up
 
     @staticmethod
-    def prob_price_decrease(pms):
+    def prob_price_decrease(pms, m_u):
         #Atention! There is parameter mu in paper and i don't know wjat does it mean
-        a = pms["beta"]*(Functions.ED(pms) + 0.1)
+        a = pms["beta"]*(Functions.ED(pms)+m_u)
         p_price_down = (-1)*min(0, a)
         return p_price_down
 

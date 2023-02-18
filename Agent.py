@@ -29,13 +29,6 @@ class Agent:
         else:
             self.__type = type 
 
-    #I've decided that agent decide wether they change their mind during time iteration or not. It recives just a list of probabilities where 
-    # 0: opt -> pes
-    # 1: pes -> opt
-    # 2: opt -> fund
-    # 3: pes -> fund
-    # 4: fund -> opt
-    # 5: fund -> pes
     def rethink_strategy(self,prob): #it could count all probabilities based on state of the market but this is more efficient way of computing it
         """Function gets a list of probabilities that:
             0: opt -> pes
