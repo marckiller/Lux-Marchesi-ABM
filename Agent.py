@@ -1,6 +1,4 @@
 from copy import deepcopy
-from Functions import Functions
-from Decision import Decision
 from random import choices
 
 class Agent:
@@ -14,6 +12,39 @@ class Agent:
 
     def __str__(self) -> str:
         return f"Hello! I'm agent {self.get_id}, and I'm {self.type}"
+    
+    def reconsider(self, pms):
+        """"Mechanism that changes agents mind based on given probabilities"""
+        choice = ['fundamentalist', 'noise_optimist', 'noise_pessimist']
+        delta_t = pms['delta_t']
+
+        if self.type == 'fundamentalist':
+            f_plus = delta_t*pms['pi_f_plus'] #probabiliti for fundamentalist to become optimist
+            f_minus =delta_t*pms['pi_f_minus'] #probabiliti for fundamentalist to become pessimist
+            f_f = 1-f_plus-f_minus #probability for fundamentalist to stay fundamentalist 
+            w = [f_f, f_plus, f_minus]
+            new_type = choices(choice, w)
+            if new_type != ['fundamentalist']:
+                self.type = new_type[0]
+
+        elif self.type == 'noise_optimist':
+            plus_f = delta_t*pms['pi_plus_f'] 
+            plus_minus = delta_t*pms['pi_plus_minus'] 
+            plus_plus = 1-plus_f-plus_minus 
+            w = [plus_f, plus_plus, plus_minus]
+            new_type = choices(choice, w)
+            if new_type != ['noise_optimist']:
+                self.type = new_type[0]
+
+        elif self.type == 'noise_pessimist':
+            minus_f = delta_t*pms['pi_minus_f']
+            minus_plus = delta_t*pms['pi_minus_plus'] 
+            minus_minus = 1 - minus_f - minus_plus
+            w = [minus_f, minus_plus, minus_minus]
+            new_type = choices(choice, w)
+            if new_type != ['noise_pessimist']:
+                self.type = new_type[0]
+        return self
         
     @property
     def get_id(self): return deepcopy(self.__id)
@@ -29,27 +60,17 @@ class Agent:
         else:
             self.__type = type 
 
-    def rethink_strategy(self,prob): #it could count all probabilities based on state of the market but this is more efficient way of computing it
-        """Function gets a list of probabilities that:
-            0: opt -> pes
-            1: pes -> opt
-            2: opt -> fund
-            3: pes -> fund
-            4: fund -> opt
-            5: fund -> pes 
-        Based on that it changes agents mood and stratedy"""
+    
+#     self.__step_values['pi_plus_minus']= Functions.pi_f_minus(self.__params, dp_dt)
+#             self.__step_values['pi_minus_plus']=Functions.pi_minus_plus(self.__params, dp_dt)
+#             self.__step_values['pi_plus_f']=Functions.pi_plus_f(self.__params, dp_dt)
+#             self.__step_values['pi_f_plus']=Functions.pi_f_plus(self.__params, dp_dt)
+#             self.__step_values['pi_minus_f']=Functions.pi_minus_f(self.__params, dp_dt)
+#             self.__step_values['pi_f_minus']=Functions.pi_f_minus(self.__params, dp_dt)
 
-        choice = ['noise_optimist', 'noise_pessimist', 'fundamentalist']
 
-        if self.__type == 'fundamentalist':
-            weights = [prob[4], prob[5], 1-prob[5]-prob[4]]
-            self.type = choices(choice, weights)[0]
 
-        elif self.__type == 'noise_optimist':
-            weights = [1-prob[2]-prob[0], prob[0], prob[2]]
-            self.type = choices(choice, weights)[0]
-
-        elif self.__type == 'noise_pessimist':
-            weights = [prob[1], 1-prob[1]-prob[3], prob[3]]
-            self.type = choices(choice, weights)[0]
-
+#agent = Agent(1)
+#print(agent.type)
+#agent.type = 'noise_optimist'
+#print(agent.type)
