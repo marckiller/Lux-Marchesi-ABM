@@ -89,19 +89,6 @@ class Functions:
         a = np.random.normal(mu, sigma)
         return pms["market_value"]*math.exp(a) #think it's ok. check
     
- #   @staticmethod
- #   def create_dict_of_probabilities(pms, dp_dt):
- #       """Most complex function that uses all other. It creates dictionary of transition probabilities. That dictionary is later passed to Agent object to potentialy change hist strategy"""
- #       dictionary = {'pi_plus_minus': Functions.pi_plus_minus(pms, dp_dt),
- #                     'pi_minus_plus': Functions.pi_minus_plus(pms, dp_dt),
- #                     'pi_plus_f': Functions.pi_plus_f(pms, dp_dt),
- #                     'pi_f_plus': Functions.pi_f_plus(pms, dp_dt),
- #                     'pi_minus_f': Functions.pi_minus_f(pms, dp_dt),
- #                     'pi_f_minus': Functions.pi_f_minus(pms, dp_dt),
- #                     'pi_price_up': Functions.prob_price_increase(pms),
- #                     'pi_pirce_down': Functions.prob_price_decrease(pms)}
- #       return dictionary
-
 
 
     

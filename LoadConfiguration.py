@@ -9,7 +9,6 @@ class Configuration:
     
     def get_variables(self):
         return self.__data
-
     @staticmethod
     def get_variables(path_to_json = 'configuration.json'):
         f = open(path_to_json)
