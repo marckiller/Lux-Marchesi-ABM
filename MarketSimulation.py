@@ -19,6 +19,8 @@ class MarketSimulation:
             self.__params = params
         else:
             print('Parameters should be dict!') #dict is used for code simplicity
+
+        self.__params['num_of_steps'] = int(self.__params['time_of_simulation']/self.__params['delta_t'])
         
         #reserving slots for transition probabilities. notation as in the paper 
         self.__params['pi_minus_plus'] =0
@@ -49,9 +51,15 @@ class MarketSimulation:
 
         #list of agents in our enviroment
         self.__agents = []
-
         #we could have created agents in __init__ but I chose not to 
         #self.create_agents 
+
+        #We also want to later produce some plots that will reproduce ones used in oryginal paper
+        self.__params['relative_change_of_fundamental_value'] = {1: 0, 5: 0, 15: 0, 25: 0}
+        self.__params['relative_change_of_price'] =  {1: 0, 5: 0, 15: 0, 25: 0}
+        #self.__relative_change_of_fundamental_value = {1: 0, 5: 0, 15: 0, 25: 0} #dict key is equal to time lag 
+        #self.__relative_change_of_price =  {1: 0, 5: 0, 15: 0, 25: 0}
+
 
         self.__history = [deepcopy(self.__params)]
 
@@ -93,10 +101,11 @@ class MarketSimulation:
         self.__params['market_price'] += self.__params['price_change']
 
         #2.2: expresind dp_dt
-        if self.__params['iteration'] < 30:
+        time_step = int(0.2/self.__params['delta_t'])
+        if self.__params['iteration'] < time_step:
             self.__params['dp_dt'] = (self.__params['market_price'] - self.__history[0]['market_price'])/self.__params['iteration']
         else:
-            self.__params['dp_dt'] = (self.__params['market_price'] - self.__history[self.__params['iteration'] -30]['market_price'])/30
+            self.__params['dp_dt'] = (self.__params['market_price'] - self.__history[self.__params['iteration'] -time_step]['market_price'])/time_step
         self.__params['pi_minus_plus'] = Functions.pi_minus_plus(self.__params)
         self.__params['pi_plus_minus'] = Functions.pi_plus_minus(self.__params)
         self.__params['pi_plus_f'] = Functions.pi_plus_f(self.__params)
@@ -134,6 +143,26 @@ class MarketSimulation:
         self.__params['num_fundamentalists'] += delta_f
         self.__params['num_noise_optimist'] += delta_p         
         self.__params['num_noise_pessimist'] += delta_o   
+
+        #saving relative changes for plots
+        for i in [int(1/self.__params['delta_t'])  ,int(5/self.__params['delta_t'])  ,int(15/self.__params['delta_t']),int(25/self.__params['delta_t'])]:
+            if self.__params['iteration'] >= i:                             #self.__history[self.__params['iteration'] - 1]['market_value'] - self.__params['market_value']
+
+                self.__params['relative_change_of_fundamental_value'][i] = self.__history[self.__params['iteration'] - i]['market_value'] - self.__params['market_value']
+                self.__params['relative_change_of_price'][i] = self.__history[self.__params['iteration'] - i]['market_price'] - self.__params['market_price']
+                
+                #self.__params['market_value'][self.__params['iteration']] - self.__params['market_value'][self.__params['iteration'] - i]
+                #self.__params['relative_change_of_price'][i] = self.__params['market_price'][self.__params['iteration']] - self.__params['market_price'][self.__params['iteration'] - i]
+            else:
+                self.__params['relative_change_of_fundamental_value'][i] = self.__params['market_value']
+                self.__params['relative_change_of_price'][i] = self.__params['market_price']
+
+
+        #self.__params['relative_change_of_fundamental_value'] = {1: 0, 5: 0, 15: 0, 25: 0}
+        #self.__params['relative_change_of_price'] =  {1: 0, 5: 0, 15: 0, 25: 0}
+
+        #self.__relative_change_of_fundamental_value = {1: 0, 5: 0, 15: 0, 25: 0} #dict key is equal to time lag 
+        #self.__relative_change_of_price =  {1: 0, 5: 0, 15: 0, 25: 0}
 
         #5: saving history
         self.__history.append(deepcopy(self.__params))     
